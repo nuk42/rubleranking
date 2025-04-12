@@ -48,9 +48,9 @@
     <table id="rankingTable" style="display:none;">
         <thead>
             <tr>
-                <th></th>
-                <th></th>
-                <th></th>
+                <th>순위</th>
+                <th>닉네임</th>
+                <th>금액</th>
             </tr>
         </thead>
         <tbody>
@@ -58,7 +58,8 @@
     </table>
 
     <script>
-        fetch('https://mafia42.com/api/rank-money')
+        // CORS Proxy 사용하여 API 요청
+        fetch('https://cors-anywhere.herokuapp.com/https://mafia42.com/api/rank-money')
             .then(response => response.json())
             .then(data => {
                 const rankData = data.rankData;
@@ -69,14 +70,17 @@
                 rankData.forEach((player, index) => {
                     const row = document.createElement("tr");
 
+                    // 순위 열
                     const rankCell = document.createElement("td");
                     rankCell.textContent = index + 1;
                     row.appendChild(rankCell);
 
+                    // 닉네임 열
                     const nicknameCell = document.createElement("td");
                     nicknameCell.textContent = player.nickname;
                     row.appendChild(nicknameCell);
 
+                    // 금액 열
                     const moneyCell = document.createElement("td");
                     moneyCell.textContent = player.money.toLocaleString();
                     row.appendChild(moneyCell);
@@ -84,6 +88,7 @@
                     tableBody.appendChild(row);
                 });
 
+                // 로딩 메시지 숨기기, 테이블 보이기
                 loadingText.style.display = "none";
                 rankingTable.style.display = "table";
             })
