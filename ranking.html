@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>루블 랭킹</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        table {
+            width: 60%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            text-align: left;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        td {
+            background-color: #f9f9f9;
+        }
+        tr:nth-child(even) td {
+            background-color: #f1f1f1;
+        }
+        #loading {
+            font-size: 20px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>루블 랭킹</h1>
+    <div id="loading">데이터를 불러오는 중...</div>
+    <table id="rankingTable" style="display:none;">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        fetch('https://mafia42.com/api/rank-money')
+            .then(response => response.json())
+            .then(data => {
+                const rankData = data.rankData;
+                const tableBody = document.querySelector("#rankingTable tbody");
+                const loadingText = document.getElementById("loading");
+                const rankingTable = document.getElementById("rankingTable");
+
+                rankData.forEach((player, index) => {
+                    const row = document.createElement("tr");
+
+                    const rankCell = document.createElement("td");
+                    rankCell.textContent = index + 1;
+                    row.appendChild(rankCell);
+
+                    const nicknameCell = document.createElement("td");
+                    nicknameCell.textContent = player.nickname;
+                    row.appendChild(nicknameCell);
+
+                    const moneyCell = document.createElement("td");
+                    moneyCell.textContent = player.money.toLocaleString();
+                    row.appendChild(moneyCell);
+
+                    tableBody.appendChild(row);
+                });
+
+                loadingText.style.display = "none";
+                rankingTable.style.display = "table";
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                document.getElementById("loading").textContent = "데이터를 불러오는 데 실패했습니다.";
+            });
+    </script>
+</body>
+</html>
